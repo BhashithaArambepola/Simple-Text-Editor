@@ -101,6 +101,11 @@ public class MainFormController {
         txtContent.clear();
         txtSearch.clear();
     }
+    public void paste(){
+        int caretPosition = txtContent.getCaretPosition();
+        txtContent.insertText(caretPosition, Copy );
+
+    }
 
     public void btnOpenOnAction(ActionEvent actionEvent) {
         open();
@@ -119,6 +124,7 @@ public class MainFormController {
     }
 
     public void btnPasteOnAction(ActionEvent actionEvent) {
+        paste();
     }
 
     public void btnFindOnAction(ActionEvent actionEvent) {
@@ -154,12 +160,15 @@ public class MainFormController {
     }
 
     public void mnbPaste(ActionEvent actionEvent) {
+        paste();
     }
 
     public void mnbSelectAll(ActionEvent actionEvent) {
+        txtContent.selectAll();
     }
 
     public void mnbEdit(ActionEvent actionEvent) {
+        txtContent.setEditable(true);
     }
 
     public void mnbReplace(ActionEvent actionEvent) {
