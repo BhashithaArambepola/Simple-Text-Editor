@@ -1,14 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="Controller.MainFormController"
-            prefHeight="400.0" prefWidth="600.0">
 
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.MainFormController">
+   <children>
+      <Button fx:id="btnNew" layoutX="14.0" layoutY="46.0" mnemonicParsing="false" onAction="#btnNewOnAction" prefHeight="51.0" prefWidth="51.0" text="New" />
+      <Button fx:id="btnOpen" layoutX="74.0" layoutY="46.0" mnemonicParsing="false" onAction="#btnOpenOnAction" prefHeight="51.0" prefWidth="51.0" text="Open" />
+      <Button fx:id="btnSave" layoutX="133.0" layoutY="46.0" mnemonicParsing="false" onAction="#btnSaveOnAction" prefHeight="51.0" prefWidth="51.0" text="Save" />
+      <Button fx:id="btnCut" layoutX="194.0" layoutY="46.0" mnemonicParsing="false" onAction="#btnCutOnAction" prefHeight="51.0" prefWidth="51.0" text="Cut" />
+      <Button fx:id="btnCopy" layoutX="256.0" layoutY="46.0" mnemonicParsing="false" onAction="#btnCopyOnAction" prefHeight="51.0" prefWidth="51.0" text="Copy" />
+      <Button fx:id="btnPaste" layoutX="318.0" layoutY="46.0" mnemonicParsing="false" onAction="#btnPasteOnAction" prefHeight="51.0" prefWidth="51.0" text="Paste" />
+      <Button fx:id="btnFind" layoutX="525.0" layoutY="106.0" mnemonicParsing="false" onAction="#btnFindOnAction" prefHeight="26.0" prefWidth="58.0" text="Find" />
+      <MenuBar layoutY="1.0" prefHeight="35.0" prefWidth="600.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#mnbNew" text="New" />
+                  <MenuItem mnemonicParsing="false" onAction="#mnbOpen" text="Open" />
+                  <MenuItem mnemonicParsing="false" onAction="#mnbSave" text="Save" />
+                  <MenuItem mnemonicParsing="false" onAction="#mnbPrint" text="Print" />
+                  <MenuItem mnemonicParsing="false" onAction="#mnbExit" text="Exit" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Edit">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#mnbCut" text="Cut" />
+                  <MenuItem mnemonicParsing="false" onAction="#mnbCopy" text="Copy" />
+                  <MenuItem mnemonicParsing="false" onAction="#mnbPaste" text="Paste" />
+                  <MenuItem mnemonicParsing="false" onAction="#mnbSelectAll" text="Select All" />
+                  <MenuItem mnemonicParsing="false" onAction="#mnbEdit" text="Edit" />
+                  <MenuItem mnemonicParsing="false" onAction="#mnbReplace" text="Replace" />
+                  <MenuItem mnemonicParsing="false" onAction="#mnbReplaceAll" text="Replace All" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#mnbAboutUs" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <TextArea fx:id="txtContent" layoutX="14.0" layoutY="141.0" prefHeight="225.0" prefWidth="571.0" />
+      <Label fx:id="lblFindCount" layoutX="15.0" layoutY="370.0" text="Find Count :" />
+      <Label fx:id="lblWordCount" layoutX="446.0" layoutY="370.0" text="Word Count :" />
+      <Button fx:id="btnUp" layoutX="446.0" layoutY="46.0" mnemonicParsing="false" onAction="#btnUpOnAction" prefHeight="51.0" prefWidth="29.0" text="Up" />
+      <Button fx:id="btnDown" layoutX="478.0" layoutY="46.0" mnemonicParsing="false" onAction="#btnDownOnAction" prefHeight="51.0" prefWidth="29.0" text="Down" />
+      <ToggleButton fx:id="btnRegEx" layoutX="516.0" layoutY="46.0" mnemonicParsing="false" onAction="#btnRegExOnAction" prefHeight="26.0" prefWidth="69.0" text="RegEx" />
+      <ToggleButton fx:id="btnCaseSens" layoutX="516.0" layoutY="73.0" mnemonicParsing="false" onAction="#btnCaseSensOnAction" prefHeight="26.0" prefWidth="69.0" text="Case Sens" />
+      <TextField fx:id="txtSearch" layoutX="14.0" layoutY="106.0" prefHeight="26.0" prefWidth="500.0" promptText="Search Text" />
+   </children>
 </AnchorPane>
