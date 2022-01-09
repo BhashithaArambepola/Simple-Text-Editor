@@ -2,14 +2,26 @@ package Controller;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import java.io.*;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 public class MainFormController {
     private final String ls = System.getProperty("line.separator");
+    private final File file = null;
+    private final List<Index> SearchIndex = new ArrayList<>();
     public Button btnNew;
     public Button btnOpen;
     public Button btnSave;
@@ -26,9 +38,29 @@ public class MainFormController {
     public ToggleButton btnCaseSens;
     public TextField txtSearch;
     FileChooser chooser = null;
-    private final File file = null;
     private String Copy;
     private String cut;
+    private int findOffSet = 1;
+
+    public void initialize() {
+        btnFind.setVisible(true);
+
+        txtSearch.textProperty().addListener((observable, oldValue, newValue) -> {
+            try {
+                Pattern regExp = Pattern.compile(newValue);
+                Matcher matcher = regExp.matcher(txtContent.getText());
+                SearchIndex.clear();
+                while (matcher.find()) {
+
+                    SearchIndex.add(new Index(matcher.start(), matcher.end()));
+                }
+            } catch (PatternSyntaxException e) {
+
+            }
+        });
+
+    }
+
 
     private void readFromFile(File file) {
         if (file != null) {
@@ -63,7 +95,7 @@ public class MainFormController {
         }
     }
 
-    public void save(){
+    public void save() {
         if (file != null) {
             if (file.exists()) writeToFile(file);
         } else {
@@ -84,12 +116,14 @@ public class MainFormController {
             }
         }
     }
-    public void copy(){
+
+    public void copy() {
         byte[] bytes = txtContent.getSelectedText().getBytes(StandardCharsets.UTF_8);
         Copy = new String(bytes);
 
     }
-    public void cut(){
+
+    public void cut() {
         byte[] bytes = txtContent.getSelectedText().getBytes(StandardCharsets.UTF_8);
         cut = new String(bytes);
         int caretPosition = txtContent.getCaretPosition();
@@ -100,10 +134,12 @@ public class MainFormController {
     public void btnNewOnAction(ActionEvent actionEvent) {
         txtContent.clear();
         txtSearch.clear();
+        txtContent.requestFocus();
     }
-    public void paste(){
+
+    public void paste() {
         int caretPosition = txtContent.getCaretPosition();
-        txtContent.insertText(caretPosition, Copy );
+        txtContent.insertText(caretPosition, Copy);
 
     }
 
@@ -128,6 +164,8 @@ public class MainFormController {
     }
 
     public void btnFindOnAction(ActionEvent actionEvent) {
+        txtSearch.requestFocus();
+
     }
 
     public void mnbNew(ActionEvent actionEvent) {
@@ -152,10 +190,12 @@ public class MainFormController {
     }
 
     public void mnbCut(ActionEvent actionEvent) {
+
         cut();
     }
 
     public void mnbCopy(ActionEvent actionEvent) {
+
         copy();
     }
 
@@ -164,10 +204,12 @@ public class MainFormController {
     }
 
     public void mnbSelectAll(ActionEvent actionEvent) {
+
         txtContent.selectAll();
     }
 
     public void mnbEdit(ActionEvent actionEvent) {
+
         txtContent.setEditable(true);
     }
 
@@ -177,18 +219,60 @@ public class MainFormController {
     public void mnbReplaceAll(ActionEvent actionEvent) {
     }
 
-    public void mnbAboutUs(ActionEvent actionEvent) {
+    public void mnbAboutUs(ActionEvent actionEvent) throws IOException {
+        URL resource = getClass().getResource("/AboutUs.fxml");
+        Parent load = FXMLLoader.load(resource);
+        Scene scene = new Scene(load);
+        Stage stage = new Stage();
+        stage.setScene(scene);
+
+        stage.show();
     }
 
     public void btnUpOnAction(ActionEvent actionEvent) {
+        if (!SearchIndex.isEmpty()) {
+            if (findOffSet == -1) {
+                findOffSet = 0;
+
+                txtContent.selectRange(SearchIndex.get(findOffSet).startingIndex, SearchIndex.get(findOffSet).endIndex);
+                findOffSet++;
+                if (findOffSet >= SearchIndex.size()) {
+                    findOffSet = 0;
+                }
+            }
+        }
     }
 
     public void btnDownOnAction(ActionEvent actionEvent) {
+        if (!SearchIndex.isEmpty()) {
+            if (findOffSet == 1) {
+                findOffSet = SearchIndex.size() - 1;
+            }
+
+            txtContent.selectRange(SearchIndex.get(findOffSet).startingIndex, SearchIndex.get(findOffSet).endIndex);
+            findOffSet++;
+            if (findOffSet >= SearchIndex.size()) {
+                findOffSet = 0;
+            }
+        }
     }
+
 
     public void btnRegExOnAction(ActionEvent actionEvent) {
     }
 
     public void btnCaseSensOnAction(ActionEvent actionEvent) {
     }
+
+}
+
+class Index {
+    int startingIndex;
+    int endIndex;
+
+    public Index(int startingIndex, int endIndex) {
+        this.startingIndex = startingIndex;
+        this.endIndex = endIndex;
+    }
+
 }
