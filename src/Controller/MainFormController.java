@@ -22,6 +22,7 @@ public class MainFormController {
     private final String ls = System.getProperty("line.separator");
     private final File file = null;
     private final List<Index> SearchIndex = new ArrayList<>();
+
     public Button btnNew;
     public Button btnOpen;
     public Button btnSave;
@@ -43,25 +44,28 @@ public class MainFormController {
     private int findOffSet = 1;
     private boolean textChanged = false;
     private Matcher matcher;
+    private int findAllCount=0;
+    private int searchCount=0;
+
+
 
     public void initialize() {
-        btnFind.setVisible(true);
 
-        txtSearch.textProperty().addListener((observable, oldValue, newValue) -> {
-            try {
-                Pattern regExp = Pattern.compile(newValue);
-                Matcher matcher = regExp.matcher(txtContent.getText());
-                SearchIndex.clear();
-                while (matcher.find()) {
 
-                    SearchIndex.add(new Index(matcher.start(), matcher.end()));
-                }
-            } catch (PatternSyntaxException e) {
+        txtSearch.textProperty().addListener((observable, oldValue, newValue) -> textChanged = true);
 
+
+        txtContent.textProperty().addListener((observable, oldValue, newValue) -> {
+            Stage stage =(Stage) txtContent.getScene().getWindow();
+            if (stage.getTitle().charAt(0)!='*'){
+                stage.setTitle("*"+stage.getTitle());
             }
-        });
 
+
+
+        });
     }
+
 
 
     private void readFromFile(File file) {
@@ -166,33 +170,23 @@ public class MainFormController {
     }
 
     public void btnFindOnAction(ActionEvent actionEvent) {
-        if (txtContent.getText().isEmpty()) {
-            new Alert(Alert.AlertType.ERROR, "There is no any text here!!", ButtonType.OK).show();
-        } else {
-            try {
-                txtContent.deselect();
-                if (textChanged) {
-                    int flags = 0;
-                    if (!btnRegEx.isSelected()) flags = flags | Pattern.LITERAL;
-                    if (!btnCaseSens.isSelected()) flags = flags | Pattern.CASE_INSENSITIVE;
 
-                    matcher = Pattern.compile(txtSearch.getText(), flags).matcher(txtContent.getText());
-                    textChanged = false;
-                }
+        txtContent.deselect();
+        if (textChanged) {
+            int flags = 0;
+            if (!btnRegEx.isSelected()) flags = flags | Pattern.LITERAL;
+            if (!btnCaseSens.isSelected()) flags = flags | Pattern.CASE_INSENSITIVE;
 
-                if (matcher.find()) {
-                    txtContent.selectRange(matcher.start(), matcher.end());
-                } else {
-                    matcher.reset();
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-
+            matcher = Pattern.compile(txtSearch.getText(), flags)
+                    .matcher(txtContent.getText());
+            textChanged = false;
         }
 
+      if (matcher.find()) {
+            txtContent.selectRange(matcher.start(), matcher.end());
+        } else {
+            matcher.reset();
+        }
 
     }
 
@@ -272,17 +266,38 @@ public class MainFormController {
     }
 
     public void btnDownOnAction(ActionEvent actionEvent) {
-        if (!SearchIndex.isEmpty()) {
-            if (findOffSet == 1) {
-                findOffSet = SearchIndex.size() - 1;
-            }
 
-            txtContent.selectRange(SearchIndex.get(findOffSet).startingIndex, SearchIndex.get(findOffSet).endIndex);
-            findOffSet++;
-            if (findOffSet >= SearchIndex.size()) {
-                findOffSet = 0;
-            }
+        makeMatcher();
+        searchCount++;
+
+
         }
+
+
+
+    private void makeMatcher() {
+        txtContent.deselect();
+        if (textChanged) {
+            int flags = 0;
+            if (!btnRegEx.isSelected()) flags = flags | Pattern.LITERAL;
+            if (!btnCaseSens.isSelected()) flags = flags | Pattern.CASE_INSENSITIVE;
+
+            matcher = Pattern.compile(txtSearch.getText(), flags)
+                    .matcher(txtContent.getText());
+            textChanged = false;
+        }
+
+
+        if (matcher.find()) {
+
+            txtContent.selectRange(matcher.start(), matcher.end());
+            SearchIndex.add(new Index(matcher.start(), matcher.end()));
+
+        } else {
+            matcher.reset();
+        }
+
+
     }
 
 
