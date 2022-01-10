@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
+
 
 public class MainFormController {
     private final String ls = System.getProperty("line.separator");
@@ -44,7 +44,7 @@ public class MainFormController {
     private int findOffSet = 1;
     private boolean textChanged = false;
     private Matcher matcher;
-    private int findAllCount=0;
+
     private int searchCount=0;
 
 
@@ -61,9 +61,8 @@ public class MainFormController {
                 stage.setTitle("*"+stage.getTitle());
             }
 
-
-
         });
+        wordCount();
     }
 
 
@@ -170,24 +169,7 @@ public class MainFormController {
     }
 
     public void btnFindOnAction(ActionEvent actionEvent) {
-
-        txtContent.deselect();
-        if (textChanged) {
-            int flags = 0;
-            if (!btnRegEx.isSelected()) flags = flags | Pattern.LITERAL;
-            if (!btnCaseSens.isSelected()) flags = flags | Pattern.CASE_INSENSITIVE;
-
-            matcher = Pattern.compile(txtSearch.getText(), flags)
-                    .matcher(txtContent.getText());
-            textChanged = false;
-        }
-
-      if (matcher.find()) {
-            txtContent.selectRange(matcher.start(), matcher.end());
-        } else {
-            matcher.reset();
-        }
-
+        makeMatcher();
     }
 
     public void mnbNew(ActionEvent actionEvent) {
@@ -236,9 +218,11 @@ public class MainFormController {
     }
 
     public void mnbReplace(ActionEvent actionEvent) {
+
     }
 
     public void mnbReplaceAll(ActionEvent actionEvent) {
+
     }
 
     public void mnbAboutUs(ActionEvent actionEvent) throws IOException {
@@ -302,6 +286,8 @@ public class MainFormController {
 
 
     public void btnRegExOnAction(ActionEvent actionEvent) {
+        textChanged = true;
+        btnUp.fire();
     }
 
     public void btnCaseSensOnAction(ActionEvent actionEvent) {
@@ -313,9 +299,13 @@ public class MainFormController {
         }
     }
 
-    public void findCount() {
-
-
+    private void wordCount() {
+        int count=0;
+        Matcher matcher = Pattern.compile("\\S+").matcher(txtContent.getText());
+        while(matcher.find()){
+            count++;
+        }
+        lblWordCount.setText(String.valueOf(count));
     }
     }
 
