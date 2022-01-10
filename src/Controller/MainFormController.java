@@ -41,6 +41,8 @@ public class MainFormController {
     private String Copy;
     private String cut;
     private int findOffSet = 1;
+    private boolean textChanged = false;
+    private Matcher matcher;
 
     public void initialize() {
         btnFind.setVisible(true);
@@ -164,7 +166,33 @@ public class MainFormController {
     }
 
     public void btnFindOnAction(ActionEvent actionEvent) {
-        txtSearch.requestFocus();
+        if (txtContent.getText().isEmpty()) {
+            new Alert(Alert.AlertType.ERROR, "There is no any text here!!", ButtonType.OK).show();
+        } else {
+            try {
+                txtContent.deselect();
+                if (textChanged) {
+                    int flags = 0;
+                    if (!btnRegEx.isSelected()) flags = flags | Pattern.LITERAL;
+                    if (!btnCaseSens.isSelected()) flags = flags | Pattern.CASE_INSENSITIVE;
+
+                    matcher = Pattern.compile(txtSearch.getText(), flags).matcher(txtContent.getText());
+                    textChanged = false;
+                }
+
+                if (matcher.find()) {
+                    txtContent.selectRange(matcher.start(), matcher.end());
+                } else {
+                    matcher.reset();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+        }
+
 
     }
 
@@ -262,9 +290,21 @@ public class MainFormController {
     }
 
     public void btnCaseSensOnAction(ActionEvent actionEvent) {
+        try {
+            textChanged = true;
+            btnFind.fire();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-}
+    public void findCount() {
+
+
+    }
+    }
+
+
 
 class Index {
     int startingIndex;
